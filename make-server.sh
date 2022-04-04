@@ -25,18 +25,22 @@ fi
 SERVER_DIR=${PWD}/${1}
 WORKING_DIRECTORY=${PWD}
 
+# Print variable in use and ask for confirm
 echo -e "Using the following variable:"
 echo "SERVER_DIR: ${SERVER_DIR}"
 echo "IP: ${2}"
 echo "PORT: ${3}"
+echo "IP_POOL: ${4}/24"
 
+# Create server directory
 echo -e "\nCreating server directory..."
 mkdir ${SERVER_DIR}
 
+# All abount easy-rsa
 echo -e "Creating easy-rsa infrastructure...\n"
 mkdir ${SERVER_DIR}/easy-rsa
 ln -s /usr/share/easy-rsa/* ${SERVER_DIR}/easy-rsa
-cp ${WORKING_DIRECTORY}/base-conf/vars ${SERVER_DIR}/easy-rsa
+cp ${WORKING_DIRECTORY}/base-server/vars ${SERVER_DIR}/easy-rsa
 cd ${SERVER_DIR}/easy-rsa
 ./easyrsa init-pki
 
@@ -46,15 +50,11 @@ echo -e "Building the CA...\n"
 echo -e "Generating server request...\n"
 ./easyrsa gen-req server nopass
 
-echo -e "Importing and sign server req...\n"
-./easyrsa import-req pki/reqs/server.req server
+echo -e "Sign server req...\n"
 ./easyrsa sign-req server server
-
-echo -e "Generating ta.key...\n"
 cd ..
-openvpn --genkey secret ta.key
 
-echo -e "Copy various file..."
+# Copy generated file
 echo -e "Copy server.key from ${SERVER_DIR}/easy-rsa/pki/private/server.key to ${SERVER_DIR}"
 cp easy-rsa/pki/private/server.key ${SERVER_DIR}
 echo -e "Copy server.crt from ${SERVER_DIR}/easy-rsa/pki/issued/server.crt to ${SERVER_DIR}"
@@ -62,12 +62,17 @@ cp easy-rsa/pki/issued/server.crt ${SERVER_DIR}
 echo -e "Copy ca.crt from ${SERVER_DIR}/easy-rsa/pki/ca.crt to ${SERVER_DIR}"
 cp easy-rsa/pki/ca.crt ${SERVER_DIR}
 
+# All about server configuration
+echo -e "Generating ta.key...\n"
+openvpn --genkey secret ta.key
+
 echo -e "Creating server.conf..."
 cd ${SERVER_DIR}
 cp ${WORKING_DIRECTORY}/base-server/server.conf server.conf
 sed -i "s:{PORT}:${3}:g" server.conf
 sed -i "s:{IP_POOL}:${4}:g" server.conf
 
+# All about generating make-client.sh
 echo -e "Creating clients..."
 mkdir clients
 cp ${WORKING_DIRECTORY}/base-server/make-client.sh clients
@@ -76,11 +81,13 @@ cp ${WORKING_DIRECTORY}/base-server/base.conf clients
 sed -i "s:{IP}:${2}:g" clients/base.conf
 sed -i "s:{PORT}:${3}:g" clients/base.conf
 
+# Create other dir
 echo -e "Creating ccd dir"
 mkdir ccd
 echo -e "Creating log dir"
 mkdir log
 
+# All about the service
 echo -e "Creating service..."
 cd ${WORKING_DIRECTORY}
 cp base-server/openvpn-base.service base-server/openvpn-${1}.service
@@ -92,6 +99,7 @@ echo -e "Enabling and starting the service...\n"
 sudo systemctl enable openvpn-${1}.service
 sudo systemctl start openvpn-${1}.service
 
+# Open the port in ufw
 echo -e "Opening port in ufw and restart it...\n"
 sudo ufw allow ${3}/udp
 sudo ufw disable
