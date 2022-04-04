@@ -14,6 +14,7 @@ fi
 
 # Various variable
 SERVER_DIR=${PWD}/${1}
+WORKING_DIRECTORY=${PWD}
 
 echo -e "Using the following variable:\n"
 echo "SERVER_DIR: ${SERVER_DIR}"
@@ -26,7 +27,7 @@ mkdir ${SERVER_DIR}
 echo -e "Creating easy-rsa infrastructure...\n"
 mkdir ${SERVER_DIR}/easy-rsa
 ln -s /usr/share/easy-rsa/* ${SERVER_DIR}/easy-rsa
-cp /etc/openvpn/base-conf/vars ${SERVER_DIR}/easy-rsa
+cp ${WORKING_DIRECTORY}/base-conf/vars ${SERVER_DIR}/easy-rsa
 cd ${SERVER_DIR}/easy-rsa
 ./easyrsa init-pki
 
@@ -51,15 +52,15 @@ cp ta.key ${SERVER_DIR}
 
 echo -e "Creating server.conf...\n"
 cd ${SERVER_DIR}
-cp /etc/openvpn/base-server/server.conf server.conf
+cp ${WORKING_DIRECTORY}/base-server/server.conf server.conf
 sed -i "s/{PORT}/${3}/g" server.conf
 sed -i "s/{IP_POOL}/${4}/g" server.conf
 
 echo -e "Creating clients...\n"
 mkdir clients
-cp /etc/openvpn/base-server/make-client.sh clients
+cp ${WORKING_DIRECTORY}/base-server/make-client.sh clients
 chmod 700 clients/make-client.sh
-cp /etc/openvpn/base-server/base.conf clients
+cp ${WORKING_DIRECTORY}/base-server/base.conf clients
 sed -i "s/{IP}/${2}/g" clients/base.conf
 sed -i "s/{PORT}/${3}/g" clients/base.conf
 
