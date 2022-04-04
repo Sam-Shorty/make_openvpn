@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # First argument: VPN name
-# Second argument: Server port
-# Third argument: IP pool address
+# Second argument: Server IP
+# Third argument: Server port
+# Fourth argument: IP pool address
 
 # Argoument check
 if [ $# -eq 0 ]
@@ -12,10 +13,12 @@ then
 fi
 
 # Various variable
-SERVER_DIR=/etc/openvpn/${1}
+SERVER_DIR=${PWD}/${1}
 
-echo "Using the following variable:"
+echo -e "Using the following variable:\n"
 echo "SERVER_DIR: ${SERVER_DIR}"
+echo "IP: ${2}"
+echo "PORT: ${3}"
 
 echo -e "\nCreating server directory...\n"
 mkdir ${SERVER_DIR}
@@ -57,7 +60,8 @@ mkdir client-configs
 cp /etc/openvpn/base-server/make-client.sh client-configs
 chmod 700 client-configs/make-client.sh
 cp /etc/openvpn/base-server/base.conf client-configs
-sed -i "s/{PORT}/${2}/g" client-configs/base.conf
+sed -i "s/{IP}/${2}/g" client-configs/base.conf
+sed -i "s/{PORT}/${3}/g" client-configs/base.conf
 
 echo -e "Enabling and starting the service...\n"
 sudo systemctl enable openvpn-spectra@${1}.service
