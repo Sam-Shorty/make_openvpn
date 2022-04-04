@@ -52,8 +52,8 @@ cp ta.key ${SERVER_DIR}
 echo -e "Creating server.conf...\n"
 cd ${SERVER_DIR}
 cp /etc/openvpn/base-server/server.conf server.conf
-sed -i "s/{PORT}/${2}/g" server.conf
-sed -i "s/{IP}/${3}/g" server.conf
+sed -i "s/{PORT}/${3}/g" server.conf
+sed -i "s/{IP_POOL}/${4}/g" server.conf
 
 echo -e "Creating client-configs...\n"
 mkdir client-configs
@@ -62,6 +62,9 @@ chmod 700 client-configs/make-client.sh
 cp /etc/openvpn/base-server/base.conf client-configs
 sed -i "s/{IP}/${2}/g" client-configs/base.conf
 sed -i "s/{PORT}/${3}/g" client-configs/base.conf
+
+echo -e "Creating ccd...\n"
+mkdir ccd
 
 echo -e "Enabling and starting the service...\n"
 sudo systemctl enable openvpn-spectra@${1}.service

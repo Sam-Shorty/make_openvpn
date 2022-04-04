@@ -35,6 +35,9 @@ cp easy-rsa/pki/private/${1}.key client-configs/${1}
 cp ta.key client-configs/${1}
 cp ca.crt client-configs/${1}
 
+echo -e "Generate file in ccd...\n"
+touch ccd/${1}
+
 echo -e "Generating OVPN...\n"
 cat ${BASE_CONFIG} \
     <(echo -e '<ca>') \
