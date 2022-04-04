@@ -53,26 +53,33 @@ cp ta.key ${SERVER_DIR}
 echo -e "Creating server.conf...\n"
 cd ${SERVER_DIR}
 cp ${WORKING_DIRECTORY}/base-server/server.conf server.conf
-sed -i "s/{PORT}/${3}/g" server.conf
-sed -i "s/{IP_POOL}/${4}/g" server.conf
+sed -i "s:{PORT}:${3}:g" server.conf
+sed -i "s:{IP_POOL}:${4}:g" server.conf
 
 echo -e "Creating clients...\n"
 mkdir clients
 cp ${WORKING_DIRECTORY}/base-server/make-client.sh clients
 chmod 700 clients/make-client.sh
 cp ${WORKING_DIRECTORY}/base-server/base.conf clients
-sed -i "s/{IP}/${2}/g" clients/base.conf
-sed -i "s/{PORT}/${3}/g" clients/base.conf
+sed -i "s:{IP}:${2}:g" clients/base.conf
+sed -i "s:{PORT}:${3}:g" clients/base.conf
 
 echo -e "Creating ccd adn log dir...\n"
 mkdir ccd
 mkdir log
 
+echo -e "Creating service...\n"
+cd ${WORKING_DIRECTORY}
+cp base-server/openvpn-base.service base-server/openvpn-${1}.service
+sed -i "s:{NAME}:${1}:g" base-server/openvpn-${1}.service
+sed -i "s:{SERVER_DIR}:${SERVER_DIR}:g" base-server/openvpn-${1}.service
+sudo mv base-server/openvpn-${1}.service /lib/systemd/system/
+
 echo -e "Enabling and starting the service...\n"
-sudo systemctl enable openvpn-spectra@${1}.service
-sudo systemctl start openvpn-spectra@${1}.service
+sudo systemctl enable openvpn-${1}.service
+sudo systemctl start openvpn-${1}.service
 
 echo -e "Opening port in ufw and restart it...\n"
-sudo ufw allow ${2}/udp
+sudo ufw allow ${3}/udp
 sudo ufw disable
 sudo ufw enable
