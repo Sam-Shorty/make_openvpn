@@ -55,13 +55,13 @@ cp /etc/openvpn/base-server/server.conf server.conf
 sed -i "s/{PORT}/${3}/g" server.conf
 sed -i "s/{IP_POOL}/${4}/g" server.conf
 
-echo -e "Creating client-configs...\n"
-mkdir client-configs
-cp /etc/openvpn/base-server/make-client.sh client-configs
-chmod 700 client-configs/make-client.sh
-cp /etc/openvpn/base-server/base.conf client-configs
-sed -i "s/{IP}/${2}/g" client-configs/base.conf
-sed -i "s/{PORT}/${3}/g" client-configs/base.conf
+echo -e "Creating clients...\n"
+mkdir clients
+cp /etc/openvpn/base-server/make-client.sh clients
+chmod 700 clients/make-client.sh
+cp /etc/openvpn/base-server/base.conf clients
+sed -i "s/{IP}/${2}/g" clients/base.conf
+sed -i "s/{PORT}/${3}/g" clients/base.conf
 
 echo -e "Creating ccd...\n"
 mkdir ccd

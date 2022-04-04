@@ -12,8 +12,8 @@ fi
 # Setup variable
 cd ..
 SERVER_DIR=${PWD}
-CLIENT_DIR=${PWD}/client-configs/${1}
-BASE_CONFIG=${PWD}/client-configs/base.conf
+CLIENT_DIR=${PWD}/clients/${1}
+BASE_CONFIG=${PWD}/clients/base.conf
 
 echo -e "Using the following variable:"
 echo -e "SERVER_DIR: ${SERVER_DIR}"
@@ -30,10 +30,10 @@ cd ${SERVER_DIR}/easy-rsa
 
 echo -e "Copy various file...\n"
 cd ${SERVER_DIR}
-cp easy-rsa/pki/issued/${1}.crt client-configs/${1}
-cp easy-rsa/pki/private/${1}.key client-configs/${1}
-cp ta.key client-configs/${1}
-cp ca.crt client-configs/${1}
+cp easy-rsa/pki/issued/${1}.crt clients/${1}
+cp easy-rsa/pki/private/${1}.key clients/${1}
+cp ta.key clients/${1}
+cp ca.crt clients/${1}
 
 echo -e "Generate file in ccd...\n"
 touch ccd/${1}
