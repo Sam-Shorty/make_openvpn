@@ -63,8 +63,9 @@ cp /etc/openvpn/base-server/base.conf clients
 sed -i "s/{IP}/${2}/g" clients/base.conf
 sed -i "s/{PORT}/${3}/g" clients/base.conf
 
-echo -e "Creating ccd...\n"
+echo -e "Creating ccd adn log dir...\n"
 mkdir ccd
+mkdir log
 
 echo -e "Enabling and starting the service...\n"
 sudo systemctl enable openvpn-spectra@${1}.service
