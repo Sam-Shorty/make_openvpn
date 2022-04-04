@@ -32,6 +32,15 @@ echo "IP: ${2}"
 echo "PORT: ${3}"
 echo "IP_POOL: ${4}/24"
 
+while true; do
+    read -p "Confirm the variable and continue with installation? Y/n: " yn
+    case $yn in
+        [Yy]* ) break;;
+        [Nn]* ) exit;;
+        * ) echo "Please answer Y/n.";;
+    esac
+done
+
 # Create server directory
 echo -e "\nCreating server directory..."
 mkdir ${SERVER_DIR}
@@ -100,7 +109,15 @@ sudo systemctl enable openvpn-${1}.service
 sudo systemctl start openvpn-${1}.service
 
 # Open the port in ufw
-echo -e "Opening port in ufw and restart it...\n"
-sudo ufw allow ${3}/udp
-sudo ufw disable
-sudo ufw enable
+while true; do
+    read -p "Do you want to open port in ufw? Y/n: " yn
+    case $yn in
+        [Yy]* ) echo -e "Opening port in ufw and restart it...\n"
+                sudo ufw allow ${3}/udp
+                sudo ufw disable
+                sudo ufw enable
+        ;;
+        [Nn]* ) break;;
+        * ) echo "Please answer Y/n.";;
+    esac
+done
