@@ -22,8 +22,8 @@ then
 fi
 
 # Various variable
-SERVER_DIR=${PWD}/${1}
 WORKING_DIRECTORY=${PWD}
+SERVER_DIR=${PWD}/${1}
 
 # Print variable in use and ask for confirm
 echo -e "Using the following variable:"
@@ -61,9 +61,9 @@ echo -e "Generating server request...\n"
 
 echo -e "Sign server req...\n"
 ./easyrsa sign-req server server
-cd ..
 
 # Copy generated file
+cd ${SERVER_DIR}
 echo -e "Copy server.key from ${SERVER_DIR}/easy-rsa/pki/private/server.key to ${SERVER_DIR}"
 cp easy-rsa/pki/private/server.key ${SERVER_DIR}
 echo -e "Copy server.crt from ${SERVER_DIR}/easy-rsa/pki/issued/server.crt to ${SERVER_DIR}"
@@ -76,7 +76,6 @@ echo -e "Generating ta.key...\n"
 openvpn --genkey secret ta.key
 
 echo -e "Creating server.conf..."
-cd ${SERVER_DIR}
 cp ${WORKING_DIRECTORY}/base-server/server.conf server.conf
 sed -i "s:{PORT}:${3}:g" server.conf
 sed -i "s:{IP_POOL}:${4}:g" server.conf
@@ -84,9 +83,9 @@ sed -i "s:{IP_POOL}:${4}:g" server.conf
 # All about generating make-client.sh
 echo -e "Creating clients..."
 mkdir clients
-cp ${WORKING_DIRECTORY}/base-server/make-client.sh clients
+cp ${WORKING_DIRECTORY}/base-server/make-client.sh clients/
 chmod 700 clients/make-client.sh
-cp ${WORKING_DIRECTORY}/base-server/base.conf clients
+cp ${WORKING_DIRECTORY}/base-server/base.conf clients/
 sed -i "s:{IP}:${2}:g" clients/base.conf
 sed -i "s:{PORT}:${3}:g" clients/base.conf
 
@@ -98,11 +97,10 @@ mkdir log
 
 # All about the service
 echo -e "Creating service..."
-cd ${WORKING_DIRECTORY}
-cp base-server/openvpn-base.service base-server/openvpn-${1}.service
-sed -i "s:{NAME}:${1}:g" base-server/openvpn-${1}.service
-sed -i "s:{SERVER_DIR}:${SERVER_DIR}:g" base-server/openvpn-${1}.service
-sudo mv base-server/openvpn-${1}.service /lib/systemd/system/
+cp ${WORKING_DIRECTORY}/base-server/openvpn-base.service openvpn-${1}.service
+sed -i "s:{NAME}:${1}:g" openvpn-${1}.service
+sed -i "s:{SERVER_DIR}:${SERVER_DIR}:g" openvpn-${1}.service
+sudo cp openvpn-${1}.service /lib/systemd/system/
 
 echo -e "Enabling and starting the service...\n"
 sudo systemctl enable openvpn-${1}.service
