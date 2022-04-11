@@ -18,6 +18,7 @@ then
     echo "Example: ./make_openvpn test myip.com 1194 10.8.0.0"
     echo -e "\n"
     echo "Run this script directly in the folder where it is installed and where you want the VPN to be created"
+    echo "Make sure you have OpenVPN and Easy-RSA installed on your system."
     exit 
 fi
 

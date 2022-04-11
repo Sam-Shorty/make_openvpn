@@ -3,6 +3,9 @@ A little script to make full and multiple OpenVPN server and relative client.
 
 For work I had to create various VPNs for various clients all independent from them on the same machine, thinking that it could be useful to other users, I decided to adapt the script to be used by anyone who needed a similar solution.
 
+# DEPENDENCIES
+Make sure you have OpenVPN and Easy-RSA installed on your system.
+
 # CREATE VPN SERVER
 
 To create the VPN server you have to use the make_openvpn.sh script.
