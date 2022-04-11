@@ -13,7 +13,7 @@ fi
 cd ..
 SERVER_DIR=${PWD}
 CLIENT_DIR=${PWD}/clients/${1}
-BASE_CONFIG=${PWD}/clients/base.conf
+BASE_CONFIG=${PWD}/clients/client.conf
 
 echo -e "Using the following variable:"
 echo -e "SERVER_DIR: ${SERVER_DIR}"

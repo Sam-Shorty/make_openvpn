@@ -50,7 +50,7 @@ mkdir ${SERVER_DIR}
 echo -e "Creating easy-rsa infrastructure...\n"
 mkdir ${SERVER_DIR}/easy-rsa
 ln -s /usr/share/easy-rsa/* ${SERVER_DIR}/easy-rsa
-cp ${WORKING_DIRECTORY}/base-server/vars ${SERVER_DIR}/easy-rsa
+cp ${WORKING_DIRECTORY}/conf/vars ${SERVER_DIR}/easy-rsa
 cd ${SERVER_DIR}/easy-rsa
 ./easyrsa init-pki
 
@@ -77,18 +77,18 @@ echo -e "Generating ta.key...\n"
 openvpn --genkey secret ta.key
 
 echo -e "Creating server.conf..."
-cp ${WORKING_DIRECTORY}/base-server/server.conf server.conf
+cp ${WORKING_DIRECTORY}/conf/server.conf server.conf
 sed -i "s:{PORT}:${3}:g" server.conf
 sed -i "s:{IP_POOL}:${4}:g" server.conf
 
 # All about generating make-client.sh
 echo -e "Creating clients..."
 mkdir clients
-cp ${WORKING_DIRECTORY}/base-server/make-client.sh clients/
+cp ${WORKING_DIRECTORY}/conf/make-client.sh clients/
 chmod 700 clients/make-client.sh
-cp ${WORKING_DIRECTORY}/base-server/base.conf clients/
-sed -i "s:{IP}:${2}:g" clients/base.conf
-sed -i "s:{PORT}:${3}:g" clients/base.conf
+cp ${WORKING_DIRECTORY}/conf/client.conf clients/
+sed -i "s:{IP}:${2}:g" clients/client.conf
+sed -i "s:{PORT}:${3}:g" clients/client.conf
 
 # Create other dir
 echo -e "Creating ccd dir"
@@ -98,7 +98,7 @@ mkdir log
 
 # All about the service
 echo -e "Creating service..."
-cp ${WORKING_DIRECTORY}/base-server/openvpn-base.service openvpn-${1}.service
+cp ${WORKING_DIRECTORY}/conf/openvpn-base.service openvpn-${1}.service
 sed -i "s:{NAME}:${1}:g" openvpn-${1}.service
 sed -i "s:{SERVER_DIR}:${SERVER_DIR}:g" openvpn-${1}.service
 sudo cp openvpn-${1}.service /lib/systemd/system/
