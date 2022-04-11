@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# A little script to create multiple OpenVPN servers that are totally independent of each other and their clients.
+# Compatible with various linux distros.
+
 # First argument: VPN name
 # Second argument: Server IP
 # Third argument: Server port
@@ -20,6 +23,22 @@ then
     echo "Run this script directly in the folder where it is installed and where you want the VPN to be created"
     echo "Make sure you have OpenVPN and Easy-RSA installed on your system."
     exit 
+fi
+
+# Make sure OpenVPN and Easy-RSA is installed
+CHECK_OPENVPN=`dpkg -s openvpn | grep Status | awk '{ print $4 }'`
+if [ "$CHECK_OPENVPN" = "not-installed" ]
+then
+    echo "OpenVPN not installed"
+    echo "Please install it with your packet manager and retry"
+    exit
+fi
+CHECK_EASYRSA=`dpkg -s easy-rsa | grep Status | awk '{ print $4 }'`
+if [ "$CHECK_EASYRSA" = "not-installed" ]
+then
+    echo "Easy-RSA not installed"
+    echo "Please install it with your packet manager and retry"
+    exit
 fi
 
 # Various variable
