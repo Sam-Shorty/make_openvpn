@@ -139,3 +139,7 @@ while true; do
         * ) echo "Please answer Y/n.";;
     esac
 done
+
+# Write log
+cd ..
+echo -e "${1} on IP: ${2}:${3} with pool: ${4}/24" >> vpnserver.log
