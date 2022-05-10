@@ -128,7 +128,7 @@ sudo systemctl start openvpn-${1}.service
 
 # Open the port in ufw
 while true; do
-    read -p "Do you want to open port in ufw? Y/n: " yn
+    read -p "Do you want to open port in ufw and restart it? Y/n: " yn
     case $yn in
         [Yy]* ) echo -e "Opening port in ufw and restart it...\n"
                 sudo ufw allow ${3}/udp
